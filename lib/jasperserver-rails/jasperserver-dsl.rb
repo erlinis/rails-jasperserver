@@ -39,6 +39,14 @@ module JasperserverRails
       )
     end
 
+    def download_report(filename, &block)
+      temp_file = Tempfile.new([filename, '.pdf'])
+      temp_file.binmode
+      temp_file.write(generate_report(&block).body)
+      temp_file.close
+      temp_file
+    end
+
     def run_report(filename, &block)
       FileUtils.mkdir_p(File.expand_path(filename).split('/')[0..-2].join('/'))
       f = File.new(filename, 'wb')
